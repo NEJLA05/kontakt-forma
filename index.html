@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kontakt forma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Kontaktiraj nas</h2>
+    <form id="kontaktForma">
+      <input type="text" name="ime" placeholder="Ime i prezime" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="poruka" placeholder="Poruka" required></textarea>
+      <button type="submit">Pošalji</button>
+    </form>
+    <p id="porukaStatus"></p>
+  </div>
+
+  <script>
+    document.getElementById('kontaktForma').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const ime = document.querySelector('input[name="ime"]').value.trim();
+      const email = document.querySelector('input[name="email"]').value.trim();
+      const poruka = document.querySelector('textarea[name="poruka"]').value.trim();
+
+      if (!ime || !email || !poruka) {
+        document.getElementById('porukaStatus').textContent = ' Sva polja moraju biti popunjena!';
+        return;
+      }
+
+      try {
+        const res = await fetch('/posalji-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ime, email, poruka })
+        });
+
+        const text = await res.text();
+        document.getElementById('porukaStatus').textContent = text;
+      } catch (err) {
+        document.getElementById('porukaStatus').textContent = 'Greška pri slanju.';
+      }
+    });
+  </script>
+</body>
+</html>
