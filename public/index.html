@@ -21,7 +21,7 @@
 
   <script>
     document.getElementById('kontaktForma').addEventListener('submit', async (e) => {
-      e.preventDefault();
+      e.preventDefault(); // Prekida defaultno ponašanje forme (refresh stranice)
 
       const ime = document.querySelector('input[name="ime"]').value.trim();
       const email = document.querySelector('input[name="email"]').value.trim();
