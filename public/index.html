@@ -27,12 +27,21 @@
       const email = document.querySelector('input[name="email"]').value.trim();
       const poruka = document.querySelector('textarea[name="poruka"]').value.trim();
 
+      // Provjera da li su sva polja popunjena
       if (!ime || !email || !poruka) {
-        document.getElementById('porukaStatus').textContent = ' Sva polja moraju biti popunjena!';
+        document.getElementById('porukaStatus').textContent = 'Sva polja moraju biti popunjena!';
+        return;
+      }
+
+      // Provjera ispravnosti emaila
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (!emailPattern.test(email)) {
+        document.getElementById('porukaStatus').textContent = 'Email nije ispravan!';
         return;
       }
 
       try {
+        // Slanje podataka serveru
         const res = await fetch('/posalji-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -41,6 +50,9 @@
 
         const text = await res.text();
         document.getElementById('porukaStatus').textContent = text;
+
+        // Resetiranje forme nakon slanja
+        document.getElementById('kontaktForma').reset();
       } catch (err) {
         document.getElementById('porukaStatus').textContent = 'Greška pri slanju.';
       }
